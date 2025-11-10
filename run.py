@@ -32,6 +32,9 @@ class Cache(type):
         key = (args, frozenset(kwargs.items()))
         if not hasattr(cls, "_cache"):
             cls._cache = weakref.WeakValueDictionary()
+        if key in cls._cache:
+            instance = cls._cache[key]
+        else:
             instance = super().__call__(*args, **kwargs)
             cls._cache[key] = instance
         return cls._cache[key]
