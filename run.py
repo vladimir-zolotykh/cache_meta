@@ -12,11 +12,19 @@ class Singleton(type):
 
 
 class Spam(metaclass=Singleton):
+    """
+    >>> s1 = Spam()
+    creating Spam instance
+    >>> s2 = Spam()
+    >>> s1 is s2
+    True
+    """
+
     def __init__(self):
         print("creating Spam instance")
 
 
 if __name__ == "__main__":
-    s1 = Spam()
-    s2 = Spam()
-    print(s1 is s2)
+    import doctest
+
+    doctest.testmod()
