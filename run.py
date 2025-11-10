@@ -5,6 +5,7 @@
 
 class Singleton(type):
     def __call__(cls, *args, **kwargs):
+        print(f"__call__ {cls = }")
         # cls = <class '__main__.Spam'>
         if not hasattr(cls, "_instance"):
             cls._instance = super().__call__(*args, **kwargs)
@@ -22,6 +23,31 @@ class Spam(metaclass=Singleton):
 
     def __init__(self):
         print("creating Spam instance")
+
+
+import weakref  # noqa E402
+
+
+class Cache(type):
+    def __call__(cls, *args, **kwargs):
+        key = (args, frozenset(kwargs.items()))
+        if not hasattr(cls, "_cache"):
+            cls._cache = weakref.WeakValueDictionary()
+            instance = super().__call__(*args, **kwargs)
+            cls._cache[key] = instance
+        return cls._cache[key]
+
+
+class Person(metaclass=Cache):
+    """
+    >>> alice = Person("Alice Smith", 30, 75000.00)
+    >>> bob = Person("Bob Johnson", 45, 92500.50)
+    """
+
+    def __init__(self, name, age, salary):
+        self.name = name
+        self.age = age
+        self.salary = salary
 
 
 if __name__ == "__main__":
