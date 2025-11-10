@@ -4,13 +4,11 @@
 
 
 class Singleton(type):
-    instance = None
-
     def __call__(cls, *args, **kwargs):
         # cls = <class '__main__.Spam'>
-        if not cls.instance:
-            cls.instance = super().__call__(*args, **kwargs)
-        return cls.instance
+        if not hasattr(cls, "_instance"):
+            cls._instance = super().__call__(*args, **kwargs)
+        return cls._instance
 
 
 class Spam(metaclass=Singleton):
