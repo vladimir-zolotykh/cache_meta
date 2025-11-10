@@ -5,7 +5,6 @@
 
 class Singleton(type):
     def __call__(cls, *args, **kwargs):
-        print(f"__call__ {cls = }")
         # cls = <class '__main__.Spam'>
         if not hasattr(cls, "_instance"):
             cls._instance = super().__call__(*args, **kwargs)
