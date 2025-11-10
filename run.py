@@ -8,9 +8,9 @@ class Singleton(type):
 
     def __call__(cls, *args, **kwargs):
         # cls = <class '__main__.Spam'>
-        if not Singleton.instance:
-            Singleton.instance = super().__call__(*args, **kwargs)
-        return Singleton.instance
+        if not cls.instance:
+            cls.instance = super().__call__(*args, **kwargs)
+        return cls.instance
 
 
 class Spam(metaclass=Singleton):
