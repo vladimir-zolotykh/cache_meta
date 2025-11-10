@@ -4,9 +4,13 @@
 
 
 class Singleton(type):
+    instance = None
+
     def __call__(cls, *args, **kwargs):
-        print(f"Singleton {cls = }")
-        return super().__call__(*args, **kwargs)
+        # cls = <class '__main__.Spam'>
+        if not Singleton.instance:
+            Singleton.instance = super().__call__(*args, **kwargs)
+        return Singleton.instance
 
 
 class Spam(metaclass=Singleton):
