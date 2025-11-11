@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from typing import Any
+import contextlib
+import io
 import unittest
 
 
@@ -57,13 +59,17 @@ def as_tuple(person: Person) -> tuple[Any, ...]:
 class TestCache(unittest.TestCase):
     def test_10(self):
         args = "Alice Smith", 30, 75000.00
-        alice = Person(*args)
+        with contextlib.redirect_stdout(io.StringIO()) as f:
+            alice = Person(*args)
         self.assertEqual(as_tuple(alice), args)
+        self.assertEqual(f.getvalue(), "creating Person(Alice Smith) ...\n")
 
     def test_20(self):
         args = "Bob Johnson", 45, 92500.50
-        bob = Person(*args)
+        with contextlib.redirect_stdout(io.StringIO()) as f:
+            bob = Person(*args)
         self.assertEqual(as_tuple(bob), args)
+        self.assertEqual(f.getvalue(), "creating Person(Bob Johnson) ...\n")
 
 
 if __name__ == "__main__":
