@@ -35,7 +35,8 @@ class Cache(type):
     def __call__(cls, *args, **kwargs):
         key = (args, frozenset(kwargs.items()))
         if not hasattr(cls, "_cache"):
-            cls._cache = weakref.WeakValueDictionary()
+            # cls._cache = weakref.WeakValueDictionary()
+            cls._cache = {}
         if key in cls._cache:
             instance = cls._cache[key]
         else:
@@ -63,6 +64,12 @@ class TestCache(unittest.TestCase):
             alice = Person(*args)
         self.assertEqual(as_tuple(alice), args)
         self.assertEqual(f.getvalue(), "creating Person(Alice Smith) ...\n")
+
+    def test_12(self):
+        args = "Alice Smith", 30, 75000.00
+        with contextlib.redirect_stdout(io.StringIO()) as f:
+            Person(*args)
+        self.assertEqual(f.getvalue(), "")
 
     def test_20(self):
         args = "Bob Johnson", 45, 92500.50
