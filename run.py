@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+from typing import Any
+import unittest
 
 
 class Singleton(type):
@@ -41,18 +43,31 @@ class Cache(type):
 
 
 class Person(metaclass=Cache):
-    """
-    >>> alice = Person("Alice Smith", 30, 75000.00)
-    >>> bob = Person("Bob Johnson", 45, 92500.50)
-    """
-
     def __init__(self, name, age, salary):
+        print(f"creating Person({name}) ...")
         self.name = name
         self.age = age
         self.salary = salary
+
+
+def as_tuple(person: Person) -> tuple[Any, ...]:
+    return tuple(person.__dict__.values())
+
+
+class TestCache(unittest.TestCase):
+    def test_10(self):
+        args = "Alice Smith", 30, 75000.00
+        alice = Person(*args)
+        self.assertEqual(as_tuple(alice), args)
+
+    def test_20(self):
+        args = "Bob Johnson", 45, 92500.50
+        bob = Person(*args)
+        self.assertEqual(as_tuple(bob), args)
 
 
 if __name__ == "__main__":
     import doctest
 
     doctest.testmod()
+    unittest.main()
